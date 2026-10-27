@@ -1,0 +1,1001 @@
+{
+  "episodes": [
+    {
+      "id": "episode-2026-10-25",
+      "slug": "2026-10-25-weekly-model-review",
+      "date": "2026-10-25",
+      "displayDate": "2026 年 10 月 25 日",
+      "editionLabel": "最近一周回顾 · 截至 10 月 25 日",
+      "title": "大模型竞争，正在从“更聪明”转向“更快、更开放、更适合 Agent”",
+      "dek": "10 月 25 日当天没有查到五家主流厂商的新旗舰；这一期回顾最近一周更值得验证的三次模型更新。",
+      "duration": "3 分 38 秒",
+      "status": "unlisted",
+      "audioStatus": "ready",
+      "audio": {
+        "url": "/audio/episode-2026-10-25-mimo.wav",
+        "mime": "audio/wav",
+        "durationSec": 218,
+        "provider": "xiaomi-mimo/mimo-v2.5-tts/茉莉",
+        "label": "Xiaomi MiMo · 茉莉 · 自然克制新闻风格"
+      },
+      "publication": {
+        "publishedAt": "2026-10-25T12:00:00+08:00",
+        "rssGuid": "dailyboke:episode-2026-10-25"
+      },
+      "scriptMarkdown": "大家好，欢迎收听今天的 AI 模型更新。\n\n先说明一下：10 月 25 日当天，我们没有查到 OpenAI、Google、Anthropic、Meta 或 xAI 发布新的旗舰模型。所以今天不硬凑“昨日新品”，而是回顾截至昨天，最近一周最值得关注的三项模型更新。\n\n第一条：Nanbeige 4.3 33B 开放权重\n\n最近上线的 Nanbeige 4.3 33B，是一个约三百三十亿参数的开放权重模型，采用 Apache 2.0 许可证，并支持最长 512K 的上下文。\n\n它的定位很明确：不是只做聊天，而是面向编程 Agent、工具调用和专业办公任务。官方希望先把它做成能力较强的“教师模型”，再把 Agent 能力蒸馏到更小的模型中。\n\n为什么重要？因为三百亿参数左右的模型，仍有机会由企业自行部署。它如果能在实际工作中保持较好的工具使用和编程能力，就可能成为闭源 API 之外的一个实用选择。\n\n不过要注意，模型卡中的多数成绩来自团队自己的测试，目前还缺少充分的第三方验证。接下来最值得观察的，是它在真实代码仓库、长任务和较低显存环境中的稳定性。\n\n第二条：Mercury 3 把扩散技术用到语言模型\n\nInception 发布的 Mercury 3，走的是一条不同路线。传统语言模型通常从左到右逐个生成 token；Mercury 采用扩散式方法，同时生成并反复修正多个 token。\n\nInception 官方称，Mercury 3 支持 100 万 token 的上下文，在英伟达 GPU 上可以达到每秒一千多个 token，并把实时语音、搜索和浏览器 Agent 作为主要应用场景。\n\n为什么重要？Agent 往往需要连续调用模型很多次。一次响应快一点，差别可能不明显；几十次调用累积起来，速度就会直接影响产品能不能实时使用。\n\n但同样需要谨慎：它与 GPT‑6 Luna、Claude Haiku 5.5 的质量比较，主要来自厂商测试。接下来要看第三方评测能否证明，它在高速生成时仍能保持准确性、工具调用可靠性和长上下文质量。\n\n第三条：MiniMax M3.1 Flash 主打 Agent 性价比\n\nMiniMax 发布的 M3.1 Flash，重点提升 Agent、编程、电脑操作和网络安全任务。\n\nMiniMax 表示，新模型的在线推理速度接近此前的三倍，使用成本降低约百分之七十。这里的数字来自官方公告，还不能直接视为独立结论。\n\n这项更新值得关注，是因为模型竞争已经不只看排行榜。对于真正运行在生产环境中的 Agent，完成一次任务要调用多少次模型、花多少钱、等待多久，往往比单次测试分数更关键。\n\n下一步要观察的是：它能否在长时间任务中保持稳定，遇到网页变化、工具报错或不完整信息时，能否主动纠错，而不是快速地产生错误结果。\n\n把这三条放在一起，可以看到一个清楚的趋势：\n\n大模型竞争正在从“谁最聪明”，转向“谁更适合 Agent、谁响应更快、谁的部署和调用成本更低”。\n\n今天的内容就到这里。每条新闻的官方来源和日期，都可以在节目页面中查看。我们明天继续关注真正值得讲的 AI 更新。",
+      "stories": [
+        {
+          "id": "nanbeige-4-3-33b",
+          "rank": 1,
+          "slug": "nanbeige-4-3-33b",
+          "topic": "开放权重",
+          "company": "Nanbeige",
+          "title": "Nanbeige 4.3 33B 开放权重",
+          "kicker": "2026-10-24",
+          "happened": "Nanbeige 在 Hugging Face 上线约 33B 参数的开放权重模型，采用 Apache 2.0 许可证，配置支持最长 524,288 token，也就是 512K 上下文。",
+          "whyImportant": "三百亿参数级模型仍有机会由企业自行部署。如果工具调用和编程能力在真实任务中成立，它会成为闭源 API 之外的实用选项。",
+          "watchNext": "等待独立复现官方基准，并验证真实代码仓库、长任务、512K 上下文和较低显存环境下的稳定性。",
+          "claims": [
+            {
+              "text": "参数规模、Apache 2.0 许可和 512K 配置可从模型仓库核对。",
+              "certainty": "fact"
+            },
+            {
+              "text": "企业私有部署可行性是基于规模与许可的分析。",
+              "certainty": "analysis"
+            },
+            {
+              "text": "模型卡中的性能成绩尚缺充分第三方验证。",
+              "certainty": "projection"
+            }
+          ],
+          "sources": [
+            {
+              "id": "nanbeige-model-card",
+              "title": "Nanbeige4.3-33B Model Card",
+              "publisher": "Nanbeige LLM Lab / Hugging Face",
+              "url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+              "publishedAt": "2026-10-24",
+              "kind": "primary",
+              "supports": "参数规模、许可、512K 配置、模型定位和厂商自测。",
+              "checkedAt": "2026-10-26T18:20:00+08:00"
+            },
+            {
+              "id": "nanbeige-independent",
+              "title": "Nanbeige4.3-33B: 17 of 20 Wins, a 512K Context, and Nothing Independently Tested",
+              "publisher": "OrcaRouter",
+              "url": "https://www.orcarouter.ai/blog/nanbeige-4-3-33b-teacher-model",
+              "publishedAt": "2026-10-25",
+              "kind": "independent",
+              "supports": "独立核对仓库时间与评测脚注，并指出尚无独立复现。",
+              "checkedAt": "2026-10-26T18:23:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "needs_review",
+            "note": "规格与许可已交叉核对；性能成绩仍主要来自厂商自测，尚缺充分独立复现。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T18:25:00+08:00"
+          }
+        },
+        {
+          "id": "mercury-3",
+          "rank": 2,
+          "slug": "mercury-3",
+          "topic": "扩散式 LLM",
+          "company": "Inception",
+          "title": "Mercury 3 把扩散技术用到语言模型",
+          "kicker": "2026-10-19",
+          "happened": "Inception 发布扩散式语言模型 Mercury 3。官方称它支持 1M 上下文，在 NVIDIA GPU 上达到每秒一千多个 token，面向实时语音、搜索和浏览器 Agent。",
+          "whyImportant": "Agent 需要连续调用模型多次，单次延迟会不断累积。扩散式生成如果能同时保证任务质量，可能提高实时语音和浏览器 Agent 的体验上限。",
+          "watchNext": "关注第三方标准化吞吐、首 token 延迟、工具调用可靠性和长上下文质量；不要把厂商测速当作普遍结论。",
+          "claims": [
+            {
+              "text": "发布时间、1M 上下文和产品可用性来自官方公告。",
+              "certainty": "fact"
+            },
+            {
+              "text": "每秒一千多个 token 是 Inception 的测试口径。",
+              "certainty": "analysis"
+            },
+            {
+              "text": "扩散式生成可能改变实时 Agent 的架构。",
+              "certainty": "projection"
+            }
+          ],
+          "sources": [
+            {
+              "id": "mercury-official",
+              "title": "Diffusion at Scale: Introducing Mercury 3",
+              "publisher": "Inception",
+              "url": "https://www.inceptionlabs.ai/blog/introducing-mercury-3",
+              "publishedAt": "2026-10-19",
+              "kind": "primary",
+              "supports": "模型路线、上下文、官方测速、定价和目标场景。",
+              "checkedAt": "2026-10-26T18:30:00+08:00"
+            },
+            {
+              "id": "mercury-independent",
+              "title": "Mercury 3 claims 1,068 tokens/s; OpenRouter sees 243",
+              "publisher": "CTOL Digital Solutions",
+              "url": "https://www.ctol.digital/news/inception-mercury-3-diffusion-llm-speed-claim-latency/",
+              "publishedAt": "2026-10-20",
+              "kind": "independent",
+              "supports": "把厂商测速与 OpenRouter 实际流量中位数并列，并说明方法不可直接对比。",
+              "checkedAt": "2026-10-26T18:33:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "needs_review",
+            "note": "发布与规格已确认；速度和质量比较属于厂商口径，不作为独立结论。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T18:35:00+08:00"
+          }
+        },
+        {
+          "id": "minimax-m3-1-flash",
+          "rank": 3,
+          "slug": "minimax-m3-1-flash",
+          "topic": "Agent 成本",
+          "company": "MiniMax",
+          "title": "MiniMax M3.1 Flash 主打 Agent 性价比",
+          "kicker": "2026-10-19",
+          "happened": "MiniMax 发布 M3.1 Flash，重点面向 Agent、编程、Computer Use 和网络安全。官方称在线推理接近三倍速度，Agent 任务成本下降约 70%。",
+          "whyImportant": "生产 Agent 的总成本由多轮模型调用、工具返回和重试累积。更低价格与更短等待可能让更多自动化流程变得可行。",
+          "watchNext": "在相同任务与 Agent 框架下比较端到端成功率、总时长、总 token 和重试次数，而不是只看单次分数或 token 单价。",
+          "claims": [
+            {
+              "text": "发布时间、官方价格和产品入口可从公告核对。",
+              "certainty": "fact"
+            },
+            {
+              "text": "接近三倍速度与 70% 降本均为 MiniMax 厂商口径。",
+              "certainty": "analysis"
+            },
+            {
+              "text": "低成本可能扩大企业 Agent 的可行范围。",
+              "certainty": "projection"
+            }
+          ],
+          "sources": [
+            {
+              "id": "minimax-official",
+              "title": "MiniMax M3.1 Flash: Redefining Agent Performance and Cost",
+              "publisher": "MiniMax",
+              "url": "https://www.minimax.io/blog/minimax-m31f",
+              "publishedAt": "2026-10-19",
+              "kind": "primary",
+              "supports": "发布、定位、厂商基准、速度和成本声明。",
+              "checkedAt": "2026-10-26T18:40:00+08:00"
+            },
+            {
+              "id": "minimax-independent",
+              "title": "MiniMax M3.1 Flash tested: cheap per token, but not per coding job",
+              "publisher": "Not an AI App",
+              "url": "https://notanaiapp.com/news/minimax-m3-1-flash-test-price",
+              "publishedAt": "2026-10-21",
+              "kind": "independent",
+              "supports": "独立编码测试与每任务成本观察，并把官方基准明确标为未复核。",
+              "checkedAt": "2026-10-26T18:43:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "needs_review",
+            "note": "发布和价格已确认；三倍速度、70% 降本和官方基准仍按厂商口径呈现。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T18:45:00+08:00"
+          }
+        }
+      ],
+      "production": {
+        "generatedAt": "2026-10-26T18:00:00+08:00",
+        "providerSummary": "近期资料人工核对 · 演示发布",
+        "reviewerNotes": "10 月 25 日当天无五家主流厂商新旗舰；厂商基准已归因，MiMo 未配置时使用本地演示音频。",
+        "qualityChecks": [
+          {
+            "label": "每条包含一手来源与独立观察",
+            "passed": true
+          },
+          {
+            "label": "厂商性能数字均明确归因",
+            "passed": true
+          },
+          {
+            "label": "事实、分析与推测已区分",
+            "passed": true
+          },
+          {
+            "label": "三组性能结论已被独立复现",
+            "passed": false
+          }
+        ]
+      },
+      "management": {
+        "unlistedAt": "2026-10-26T12:21:54.710Z"
+      }
+    },
+    {
+      "id": "demo-review-draft",
+      "slug": "demo-review-draft",
+      "date": "2026-10-26",
+      "displayDate": "2026 年 10 月 26 日",
+      "editionLabel": "已发布节目",
+      "title": "最近一周大模型更新",
+      "dek": "复用已核对的 10 月 25 日周回顾，用于体验修改、退回、MiMo 音频准备与发布。",
+      "duration": "47 秒",
+      "status": "unlisted",
+      "audioStatus": "ready",
+      "scriptMarkdown": "Nanbeige 4.3 33B 开放权重，约 33B 参数，采用 Apache 2.0 许可，支持 512K 上下文，面向 Agent 编程与专业协作。模型卡成绩尚缺充分独立复现。\n\nInception 在 10 月 19 日发布扩散式语言模型 Mercury 3。官方称支持 1M 上下文和每秒一千多个 token，但实际吞吐会受硬件与测量方式影响。\n\nMiniMax 在 10 月 19 日发布 M3.1 Flash。官方称在线推理接近三倍速度、Agent 任务成本下降 70%；这两项都必须保留厂商归因。",
+      "stories": [
+        {
+          "id": "draft-nanbeige",
+          "rank": 1,
+          "slug": "draft-nanbeige",
+          "topic": "开放权重",
+          "company": "Nanbeige",
+          "title": "Nanbeige 4.3 33B 开放权重",
+          "kicker": "2026-10-24",
+          "happened": "约 33B 参数，Apache 2.0，512K 上下文。",
+          "whyImportant": "为企业私有部署 Agent 模型提供新选项。",
+          "watchNext": "独立复现、真实代码仓库和低显存稳定性。",
+          "claims": [
+            {
+              "text": "性能数据主要来自厂商模型卡。",
+              "certainty": "analysis"
+            }
+          ],
+          "sources": [
+            {
+              "id": "draft-nanbeige-official",
+              "title": "Nanbeige4.3-33B Model Card",
+              "publisher": "Hugging Face",
+              "url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+              "publishedAt": "2026-10-24",
+              "kind": "primary",
+              "supports": "模型规格与厂商自测。",
+              "checkedAt": "2026-10-26T18:20:00+08:00"
+            },
+            {
+              "id": "draft-nanbeige-independent",
+              "title": "Nothing Independently Tested",
+              "publisher": "OrcaRouter",
+              "url": "https://www.orcarouter.ai/blog/nanbeige-4-3-33b-teacher-model",
+              "publishedAt": "2026-10-25",
+              "kind": "independent",
+              "supports": "核对仓库与复现状态。",
+              "checkedAt": "2026-10-26T18:23:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "needs_review",
+            "note": "规格已核对，性能待独立复现。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T18:25:00+08:00"
+          }
+        },
+        {
+          "id": "draft-mercury",
+          "rank": 2,
+          "slug": "draft-mercury",
+          "topic": "扩散式 LLM",
+          "company": "Inception",
+          "title": "Mercury 3 把扩散技术用到语言模型",
+          "kicker": "2026-10-19",
+          "happened": "官方称 1M 上下文和每秒一千多个 token。",
+          "whyImportant": "低延迟可能改善多步 Agent。",
+          "watchNext": "第三方速度、质量与工具可靠性。",
+          "claims": [
+            {
+              "text": "速度属于 Inception 厂商口径。",
+              "certainty": "analysis"
+            }
+          ],
+          "sources": [
+            {
+              "id": "draft-mercury-official",
+              "title": "Introducing Mercury 3",
+              "publisher": "Inception",
+              "url": "https://www.inceptionlabs.ai/blog/introducing-mercury-3",
+              "publishedAt": "2026-10-19",
+              "kind": "primary",
+              "supports": "官方规格和测速。",
+              "checkedAt": "2026-10-26T18:30:00+08:00"
+            },
+            {
+              "id": "draft-mercury-independent",
+              "title": "OpenRouter sees 243",
+              "publisher": "CTOL Digital Solutions",
+              "url": "https://www.ctol.digital/news/inception-mercury-3-diffusion-llm-speed-claim-latency/",
+              "publishedAt": "2026-10-20",
+              "kind": "independent",
+              "supports": "对照实际流量中位数。",
+              "checkedAt": "2026-10-26T18:33:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "needs_review",
+            "note": "规格已确认，速度口径差异明显。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T18:35:00+08:00"
+          }
+        },
+        {
+          "id": "draft-minimax",
+          "rank": 3,
+          "slug": "draft-minimax",
+          "topic": "Agent 成本",
+          "company": "MiniMax",
+          "title": "MiniMax M3.1 Flash 主打 Agent 性价比",
+          "kicker": "2026-10-19",
+          "happened": "官方称速度接近三倍、Agent 成本下降约 70%。",
+          "whyImportant": "多步任务对总成本与总时长非常敏感。",
+          "watchNext": "端到端成功率、总成本和重试次数。",
+          "claims": [
+            {
+              "text": "速度和降本均为 MiniMax 厂商口径。",
+              "certainty": "analysis"
+            }
+          ],
+          "sources": [
+            {
+              "id": "draft-minimax-official",
+              "title": "MiniMax M3.1 Flash",
+              "publisher": "MiniMax",
+              "url": "https://www.minimax.io/blog/minimax-m31f",
+              "publishedAt": "2026-10-19",
+              "kind": "primary",
+              "supports": "官方规格、速度和成本声明。",
+              "checkedAt": "2026-10-26T18:40:00+08:00"
+            },
+            {
+              "id": "draft-minimax-independent",
+              "title": "Cheap per token, but not per coding job",
+              "publisher": "Not an AI App",
+              "url": "https://notanaiapp.com/news/minimax-m3-1-flash-test-price",
+              "publishedAt": "2026-10-21",
+              "kind": "independent",
+              "supports": "独立编码测试和成本观察。",
+              "checkedAt": "2026-10-26T18:43:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "needs_review",
+            "note": "发布和价格已确认，性能声明保持厂商归因。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T18:45:00+08:00"
+          }
+        }
+      ],
+      "production": {
+        "generatedAt": "2026-10-26T18:50:00+08:00",
+        "providerSummary": "mock news + mock editorial · 待人工审核",
+        "reviewerNotes": "正式音色：Xiaomi MiMo 茉莉；中等偏慢、自然、克制、可信，段落停顿约 0.6 秒。",
+        "qualityChecks": [
+          {
+            "label": "每条包含一手来源与独立观察",
+            "passed": true
+          },
+          {
+            "label": "厂商声明已明确归因",
+            "passed": true
+          },
+          {
+            "label": "已说明不是 10 月 25 日当天三款新旗舰",
+            "passed": true
+          },
+          {
+            "label": "等待人工审核",
+            "passed": false
+          }
+        ]
+      },
+      "audio": {
+        "url": "/audio/demo-review-draft-mimo.wav",
+        "mime": "audio/wav",
+        "durationSec": 47,
+        "provider": "xiaomi-mimo/mimo-v2.5-tts/茉莉",
+        "label": "Xiaomi MiMo · 茉莉 · 自然克制新闻风格"
+      },
+      "publication": {
+        "publishedAt": "2026-10-26T12:25:19.440Z",
+        "rssGuid": "dailyboke:demo-review-draft"
+      },
+      "revisionNumber": 1,
+      "management": {
+        "unlistedAt": "2026-10-26T12:25:19.509Z"
+      },
+      "versionHistory": [
+        {
+          "number": 2,
+          "savedAt": "2026-10-26T12:25:19.440Z",
+          "editionLabel": "已发布节目",
+          "title": "最近一周大模型更新",
+          "dek": "复用已核对的 10 月 25 日周回顾，用于体验修改、退回、MiMo 音频准备与发布。",
+          "scriptMarkdown": "Nanbeige 4.3 33B 开放权重，约 33B 参数，采用 Apache 2.0 许可，支持 512K 上下文，面向 Agent 编程与专业协作。模型卡成绩尚缺充分独立复现。\n\nInception 在 10 月 19 日发布扩散式语言模型 Mercury 3。官方称支持 1M 上下文和每秒一千多个 token，但实际吞吐会受硬件与测量方式影响。\n\nMiniMax 在 10 月 19 日发布 M3.1 Flash。官方称在线推理接近三倍速度、Agent 任务成本下降 70%；这两项都必须保留厂商归因。",
+          "stories": [
+            {
+              "id": "draft-nanbeige",
+              "rank": 1,
+              "slug": "draft-nanbeige",
+              "topic": "开放权重",
+              "company": "Nanbeige",
+              "title": "Nanbeige 4.3 33B 开放权重",
+              "kicker": "2026-10-24",
+              "happened": "约 33B 参数，Apache 2.0，512K 上下文。",
+              "whyImportant": "为企业私有部署 Agent 模型提供新选项。",
+              "watchNext": "独立复现、真实代码仓库和低显存稳定性。",
+              "claims": [
+                {
+                  "text": "性能数据主要来自厂商模型卡。",
+                  "certainty": "analysis"
+                }
+              ],
+              "sources": [
+                {
+                  "id": "draft-nanbeige-official",
+                  "title": "Nanbeige4.3-33B Model Card",
+                  "publisher": "Hugging Face",
+                  "url": "https://huggingface.co/Nanbeige/Nanbeige4.3-33B",
+                  "publishedAt": "2026-10-24",
+                  "kind": "primary",
+                  "supports": "模型规格与厂商自测。",
+                  "checkedAt": "2026-10-26T18:20:00+08:00"
+                },
+                {
+                  "id": "draft-nanbeige-independent",
+                  "title": "Nothing Independently Tested",
+                  "publisher": "OrcaRouter",
+                  "url": "https://www.orcarouter.ai/blog/nanbeige-4-3-33b-teacher-model",
+                  "publishedAt": "2026-10-25",
+                  "kind": "independent",
+                  "supports": "核对仓库与复现状态。",
+                  "checkedAt": "2026-10-26T18:23:00+08:00"
+                }
+              ],
+              "verification": {
+                "status": "needs_review",
+                "note": "规格已核对，性能待独立复现。",
+                "checkedBy": "DailyBoke 编辑",
+                "checkedAt": "2026-10-26T18:25:00+08:00"
+              }
+            },
+            {
+              "id": "draft-mercury",
+              "rank": 2,
+              "slug": "draft-mercury",
+              "topic": "扩散式 LLM",
+              "company": "Inception",
+              "title": "Mercury 3 把扩散技术用到语言模型",
+              "kicker": "2026-10-19",
+              "happened": "官方称 1M 上下文和每秒一千多个 token。",
+              "whyImportant": "低延迟可能改善多步 Agent。",
+              "watchNext": "第三方速度、质量与工具可靠性。",
+              "claims": [
+                {
+                  "text": "速度属于 Inception 厂商口径。",
+                  "certainty": "analysis"
+                }
+              ],
+              "sources": [
+                {
+                  "id": "draft-mercury-official",
+                  "title": "Introducing Mercury 3",
+                  "publisher": "Inception",
+                  "url": "https://www.inceptionlabs.ai/blog/introducing-mercury-3",
+                  "publishedAt": "2026-10-19",
+                  "kind": "primary",
+                  "supports": "官方规格和测速。",
+                  "checkedAt": "2026-10-26T18:30:00+08:00"
+                },
+                {
+                  "id": "draft-mercury-independent",
+                  "title": "OpenRouter sees 243",
+                  "publisher": "CTOL Digital Solutions",
+                  "url": "https://www.ctol.digital/news/inception-mercury-3-diffusion-llm-speed-claim-latency/",
+                  "publishedAt": "2026-10-20",
+                  "kind": "independent",
+                  "supports": "对照实际流量中位数。",
+                  "checkedAt": "2026-10-26T18:33:00+08:00"
+                }
+              ],
+              "verification": {
+                "status": "needs_review",
+                "note": "规格已确认，速度口径差异明显。",
+                "checkedBy": "DailyBoke 编辑",
+                "checkedAt": "2026-10-26T18:35:00+08:00"
+              }
+            },
+            {
+              "id": "draft-minimax",
+              "rank": 3,
+              "slug": "draft-minimax",
+              "topic": "Agent 成本",
+              "company": "MiniMax",
+              "title": "MiniMax M3.1 Flash 主打 Agent 性价比",
+              "kicker": "2026-10-19",
+              "happened": "官方称速度接近三倍、Agent 成本下降约 70%。",
+              "whyImportant": "多步任务对总成本与总时长非常敏感。",
+              "watchNext": "端到端成功率、总成本和重试次数。",
+              "claims": [
+                {
+                  "text": "速度和降本均为 MiniMax 厂商口径。",
+                  "certainty": "analysis"
+                }
+              ],
+              "sources": [
+                {
+                  "id": "draft-minimax-official",
+                  "title": "MiniMax M3.1 Flash",
+                  "publisher": "MiniMax",
+                  "url": "https://www.minimax.io/blog/minimax-m31f",
+                  "publishedAt": "2026-10-19",
+                  "kind": "primary",
+                  "supports": "官方规格、速度和成本声明。",
+                  "checkedAt": "2026-10-26T18:40:00+08:00"
+                },
+                {
+                  "id": "draft-minimax-independent",
+                  "title": "Cheap per token, but not per coding job",
+                  "publisher": "Not an AI App",
+                  "url": "https://notanaiapp.com/news/minimax-m3-1-flash-test-price",
+                  "publishedAt": "2026-10-21",
+                  "kind": "independent",
+                  "supports": "独立编码测试和成本观察。",
+                  "checkedAt": "2026-10-26T18:43:00+08:00"
+                }
+              ],
+              "verification": {
+                "status": "needs_review",
+                "note": "发布和价格已确认，性能声明保持厂商归因。",
+                "checkedBy": "DailyBoke 编辑",
+                "checkedAt": "2026-10-26T18:45:00+08:00"
+              }
+            }
+          ],
+          "duration": "47 秒",
+          "audio": {
+            "url": "/audio/demo-review-draft-mimo.wav",
+            "mime": "audio/wav",
+            "durationSec": 47,
+            "provider": "xiaomi-mimo/mimo-v2.5-tts/茉莉",
+            "label": "Xiaomi MiMo · 茉莉 · 自然克制新闻风格"
+          }
+        }
+      ]
+    },
+    {
+      "id": "episode-2026-10-26-deepseek-v4-1-flash-1017",
+      "slug": "2026-10-26-deepseek-v4-1-flash-1017",
+      "date": "2026-10-26",
+      "displayDate": "2026 年 10 月 26 日",
+      "editionLabel": "模型专题 · DeepSeek",
+      "title": "DeepSeek V4.1 Flash 1017：更强的 Agent，不等于更轻的部署",
+      "dek": "从 1017 更新、非对称架构到真实成本：拆解 DeepSeek 最新 Flash 模型适合谁，又有哪些数字仍需独立验证。",
+      "duration": "27 秒",
+      "status": "published",
+      "audioStatus": "ready",
+      "scriptMarkdown": "大家好，欢迎收听《日更 AI》。今天做一期 DeepSeek 模型专题。\n\n先把名字说准。截至 2026 年 10 月 26 日，最新版本是 10 月 17 日发布的 DeepSeek V4.1 Flash 1017。它是九月版的小版本更新，网页、App 和 API 都已切换，API 模型名仍是 deepseek-flash。",
+      "stories": [
+        {
+          "id": "deepseek-1017-update",
+          "rank": 1,
+          "slug": "deepseek-1017-update",
+          "topic": "模型更新",
+          "company": "DeepSeek",
+          "title": "正式型号是 DeepSeek‑V4.1‑Flash‑1017",
+          "kicker": "2026-10-17",
+          "happened": "DeepSeek 在 10 月 17 日把 V4.1 Flash 更新到 1017 版本，网页、App 与 API 已同步；API 模型名保持 deepseek-flash。官方称它提升推理、编程、Agent 与视觉能力，同时缩短输出和任务时间。",
+          "whyImportant": "它不是只刷新参数，而是针对完整项目开发和 Agent 工作流做小版本优化。对生产用户来说，输出长度和完成时间与能力分数同样影响总成本。",
+          "watchNext": "在相同代码仓库、工具和 harness 下复测项目成功率；区分官方基准、第三方数据与自己的业务评测。",
+          "claims": [
+            {
+              "text": "1017 于 2026-10-17 发布并已进入网页、App 和 API。",
+              "certainty": "fact"
+            },
+            {
+              "text": "官方基准显示 HLE、Terminal-Bench 与 DeepSWE 均提升。",
+              "certainty": "analysis"
+            },
+            {
+              "text": "项目开发能力是否普遍提升仍需业务环境验证。",
+              "certainty": "projection"
+            }
+          ],
+          "sources": [
+            {
+              "id": "deepseek-1017-release",
+              "title": "DeepSeek-V4.1-Flash-1017: Wish-Driven Programming Made Real",
+              "publisher": "DeepSeek API Docs",
+              "url": "https://api-docs.deepseek.com/news/news261017/",
+              "publishedAt": "2026-10-17",
+              "kind": "primary",
+              "supports": "发布日期、上线范围、自反馈强化学习和产品开发定位。",
+              "checkedAt": "2026-10-26T20:10:00+08:00"
+            },
+            {
+              "id": "deepseek-1017-card",
+              "title": "DeepSeek-V4.1-Flash-1017 Model Card",
+              "publisher": "DeepSeek / Hugging Face",
+              "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+              "publishedAt": "2026-10-17",
+              "kind": "primary",
+              "supports": "MIT 许可、1M 上下文、官方基准、harness 和推理入口。",
+              "checkedAt": "2026-10-26T20:12:00+08:00"
+            },
+            {
+              "id": "deepseek-independent-benchmarks",
+              "title": "DeepSeek V4.1 Flash benchmarks & pricing",
+              "publisher": "The Model Gap",
+              "url": "https://themodelgap.com/models/deepseek-v4-1-flash",
+              "publishedAt": "2026-10-19",
+              "kind": "independent",
+              "supports": "汇总 Artificial Analysis 的 1017 数据，并解释不同 harness 不可直接比较。",
+              "checkedAt": "2026-10-26T20:15:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "verified",
+            "note": "型号、发布日期和上线范围由官方公告与模型卡确认；能力提升同时保留第三方不同口径。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T20:18:00+08:00"
+          }
+        },
+        {
+          "id": "deepseek-architecture-deployment",
+          "rank": 2,
+          "slug": "deepseek-architecture-deployment",
+          "topic": "架构与部署",
+          "company": "DeepSeek",
+          "title": "1M 上下文和压缩 KV cache，但完整权重仍约 510 GB",
+          "kicker": "架构拆解",
+          "happened": "V4.1 Flash 是多模态 MoE，采用 20 层因果编码器加 20 层解码器。官方称预填充每 token 激活约 8B 参数、生成约 16B，并把持久化 KV cache 压缩到上一代约八分之一。",
+          "whyImportant": "对长代码库和多步 Agent，KV cache、激活参数和并发比总参数更直接影响推理成本。MIT 开放权重增加了部署选择，但不代表消费级硬件即可运行原始版本。",
+          "watchNext": "评估量化后的能力损失、真实显存、首 token 延迟、并发和 1M 长上下文检索稳定性。",
+          "claims": [
+            {
+              "text": "模型卡确认 1M 上下文、MIT 许可和约 510 GB 仓库。",
+              "certainty": "fact"
+            },
+            {
+              "text": "8B/16B 激活量与 KV cache 压缩来自官方技术报告。",
+              "certainty": "analysis"
+            },
+            {
+              "text": "多数团队自托管仍需要高端多卡基础设施。",
+              "certainty": "projection"
+            }
+          ],
+          "sources": [
+            {
+              "id": "deepseek-v41-base-card",
+              "title": "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression",
+              "publisher": "DeepSeek / Hugging Face",
+              "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+              "publishedAt": "2026-09-10",
+              "kind": "primary",
+              "supports": "552B backbone、8B/16B 激活、CED、CSA2、SWA replay 与 KV cache 声明。",
+              "checkedAt": "2026-10-26T20:20:00+08:00"
+            },
+            {
+              "id": "deepseek-1017-repository",
+              "title": "DeepSeek-V4.1-Flash-1017 repository",
+              "publisher": "DeepSeek / Hugging Face",
+              "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/tree/main",
+              "publishedAt": "2026-10-17",
+              "kind": "primary",
+              "supports": "完整仓库体积、权重格式、许可证与部署说明。",
+              "checkedAt": "2026-10-26T20:22:00+08:00"
+            },
+            {
+              "id": "deepseek-vllm-recipe",
+              "title": "DeepSeek-V4.1-Flash vLLM deployment recipe",
+              "publisher": "vLLM Project",
+              "url": "https://github.com/vllm-project/recipes/blob/main/models/deepseek-ai/DeepSeek-V4.1-Flash.yaml",
+              "publishedAt": "2026-10-17",
+              "kind": "independent",
+              "supports": "独立推理框架的硬件支持与高级部署配置。",
+              "checkedAt": "2026-10-26T20:24:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "verified",
+            "note": "架构来自官方技术资料；部署门槛由仓库体积与独立 vLLM 配方交叉确认。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T20:26:00+08:00"
+          }
+        },
+        {
+          "id": "deepseek-price-and-fit",
+          "rank": 3,
+          "slug": "deepseek-price-and-fit",
+          "topic": "成本与选型",
+          "company": "DeepSeek",
+          "title": "API 很便宜，自托管却未必更省",
+          "kicker": "生产成本",
+          "happened": "官方 API 非高峰未缓存输入为每百万 token 0.15 美元、输出 0.60 美元，高峰翻倍；缓存命中输入最低 0.003 美元。官方 deepseek-flash 已指向 1017。",
+          "whyImportant": "Agent 成本由多轮调用、缓存命中、成功率和重试共同决定。一个独立案例中，四张 H200 的按需自托管费用高于等量 DeepSeek API 估算，说明开放权重不等于低运维成本。",
+          "watchNext": "用真实业务的任务成功率、总 token、重试次数和人工复核成本计算每任务价格。",
+          "claims": [
+            {
+              "text": "API 型号、上下文、输出上限和当前价格来自官方价格页。",
+              "certainty": "fact"
+            },
+            {
+              "text": "第三方自托管案例发生在 1017 之前，只能说明成本结构。",
+              "certainty": "analysis"
+            },
+            {
+              "text": "中小团队通常更适合先从 API 验证。",
+              "certainty": "projection"
+            }
+          ],
+          "sources": [
+            {
+              "id": "deepseek-pricing",
+              "title": "Models & Pricing",
+              "publisher": "DeepSeek API Docs",
+              "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+              "publishedAt": "2026-10-26",
+              "kind": "primary",
+              "supports": "deepseek-flash 对应 1017、1M 上下文、384K 输出、峰谷价格与并发。",
+              "checkedAt": "2026-10-26T20:28:00+08:00"
+            },
+            {
+              "id": "deepseek-self-host-cost",
+              "title": "Firm rents four Nvidia H200s to test '80x cheaper' DeepSeek claim",
+              "publisher": "Tom's Hardware",
+              "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/firm-rents-four-nvidia-h200s-to-test-80x-cheaper-deepseek-claim-usd13-200-monthly-gpu-rental-doubles-claude-bill-while-security-flaws-keep-code-offline",
+              "publishedAt": "2026-10-01",
+              "kind": "independent",
+              "supports": "独立自托管成本案例、API 成本对比及安全隔离限制。",
+              "checkedAt": "2026-10-26T20:30:00+08:00"
+            }
+          ],
+          "verification": {
+            "status": "verified",
+            "note": "当前价格由官方页面确认；独立案例明确标注为 1017 之前的运维成本观察。",
+            "checkedBy": "DailyBoke 编辑",
+            "checkedAt": "2026-10-26T20:32:00+08:00"
+          }
+        }
+      ],
+      "production": {
+        "generatedAt": "2026-10-26T20:35:00+08:00",
+        "providerSummary": "DeepSeek 官方公告与模型卡 + 独立评测与成本案例",
+        "reviewerNotes": "型号已从用户口述校正为最新版 DeepSeek-V4.1-Flash-1017；厂商基准与第三方数据分开呈现。",
+        "qualityChecks": [
+          {
+            "label": "型号、发布日期与当前 API 映射已核对",
+            "passed": true
+          },
+          {
+            "label": "架构、许可、上下文与价格可追溯",
+            "passed": true
+          },
+          {
+            "label": "厂商基准与第三方结果明确区分",
+            "passed": true
+          },
+          {
+            "label": "自托管案例已注明并非 1017 性能验证",
+            "passed": true
+          }
+        ]
+      },
+      "audio": {
+        "url": "/audio/episode-2026-10-26-deepseek-v4-1-flash-1017-revision-2-mimo.wav",
+        "mime": "audio/wav",
+        "durationSec": 27,
+        "provider": "xiaomi-mimo/mimo-v2.5-tts/茉莉",
+        "label": "Xiaomi MiMo · 茉莉 · 自然克制新闻风格"
+      },
+      "revisionNumber": 2,
+      "publication": {
+        "publishedAt": "2026-10-26T12:32:17.405Z",
+        "rssGuid": "dailyboke:episode-2026-10-26-deepseek-v4-1-flash-1017"
+      },
+      "versionHistory": [
+        {
+          "number": 1,
+          "savedAt": "2026-10-26T12:32:17.405Z",
+          "editionLabel": "模型专题 · DeepSeek",
+          "title": "DeepSeek V4.1 Flash 1017：更强的 Agent，不等于更轻的部署",
+          "dek": "从 1017 更新、非对称架构到真实成本：拆解 DeepSeek 最新 Flash 模型适合谁，又有哪些数字仍需独立验证。",
+          "scriptMarkdown": "大家好，欢迎收听《日更 AI》。今天做一期 DeepSeek 模型专题。\n\n先把名字说准。截至 2026 年 10 月 26 日，最新版本是 10 月 17 日发布的 DeepSeek V4.1 Flash 1017。它是九月版的小版本更新，网页、App 和 API 都已切换，API 模型名仍是 deepseek-flash。\n\n第一，1017 更新了什么。官方称它在推理、编程、Agent 和视觉任务上更强，同时输出更短、完成更快。它加入带自反馈的强化学习，重点改善从零完成游戏、三维场景和较长软件项目的能力。\n\n官方模型卡里，Humanity's Last Exam 无工具成绩从 36.8 升到 42.6；Terminal Bench 4.0 从 31.2 升到 42.3；DeepSWE 1.1 从 74.2 升到 77.0。不过这些都是厂商测试。Artificial Analysis 测得的 Humanity's Last Exam 是 43.33，接近官方；Terminal Bench 则是 33.84，低于官方。两边使用的 Agent 框架和推理设置不同，不能直接判定谁对谁错。更可靠的做法，是在自己的仓库、工具和提示词上复测。\n\n第二，它为什么适合长任务。V4.1 Flash 是多模态混合专家模型，支持文字、图片和一百万 token 上下文。技术报告使用五千五百二十亿参数的 backbone 口径，Hugging Face 仓库显示约七千六百三十亿参数；两者统计范围不同。更关键的是，每个 token 在输入阶段约激活八十亿参数，生成阶段约一百六十亿。\n\n它用二十层因果编码器加二十层解码器，并压缩全局 KV cache。官方称持久化缓存约为上一代的八分之一。对长代码库或 Agent 历史来说，这比总参数量更直接影响显存和并发。\n\n模型采用 MIT 许可证，可以商用，但开放权重不等于普通电脑能跑。完整仓库约五百一十 GB，原始版本仍需要高端多卡服务器。生产团队还要测试量化损失、首 token 延迟、并发和运维。\n\n第三，价格和适用人群。官方 API 的 deepseek-flash 目前就是 1017，支持一百万 token 上下文和最高三十八万四千 token 输出。非高峰时段，每百万未缓存输入 token 是零点一五美元，输出是零点六美元；高峰翻倍，缓存命中输入最低是零点零零三美元。\n\n但便宜的 token 不一定等于便宜的任务。一个早于 1017 的独立案例用四张 H200 自托管，按需服务器每天约四百四十一美元，高于同等用量的 API 估算。它不能证明新版能力高低，只说明硬件、安全和运维必须一起算。\n\n如果你在做代码 Agent、长文档分析、图片自动化，或能重复利用缓存，1017 值得试。已有多卡基础设施并要求数据留在本地的团队，可以评估开放权重；个人和中小团队更适合先用 API。\n\n最后关注三件事：相同框架下能否复现 Agent 基准；一百万 token 场景的检索和稳定性；以及按真实任务成功率计算的总成本。\n\n总结：DeepSeek V4.1 Flash 1017 把更强的项目开发能力、超长上下文、开放权重和低价 API 放在一起，但最终判断仍要回到你的代码库和成本表。来源和口径都在节目页面。这里是《日更 AI》，我们下期见。",
+          "stories": [
+            {
+              "id": "deepseek-1017-update",
+              "rank": 1,
+              "slug": "deepseek-1017-update",
+              "topic": "模型更新",
+              "company": "DeepSeek",
+              "title": "正式型号是 DeepSeek‑V4.1‑Flash‑1017",
+              "kicker": "2026-10-17",
+              "happened": "DeepSeek 在 10 月 17 日把 V4.1 Flash 更新到 1017 版本，网页、App 与 API 已同步；API 模型名保持 deepseek-flash。官方称它提升推理、编程、Agent 与视觉能力，同时缩短输出和任务时间。",
+              "whyImportant": "它不是只刷新参数，而是针对完整项目开发和 Agent 工作流做小版本优化。对生产用户来说，输出长度和完成时间与能力分数同样影响总成本。",
+              "watchNext": "在相同代码仓库、工具和 harness 下复测项目成功率；区分官方基准、第三方数据与自己的业务评测。",
+              "claims": [
+                {
+                  "text": "1017 于 2026-10-17 发布并已进入网页、App 和 API。",
+                  "certainty": "fact"
+                },
+                {
+                  "text": "官方基准显示 HLE、Terminal-Bench 与 DeepSWE 均提升。",
+                  "certainty": "analysis"
+                },
+                {
+                  "text": "项目开发能力是否普遍提升仍需业务环境验证。",
+                  "certainty": "projection"
+                }
+              ],
+              "sources": [
+                {
+                  "id": "deepseek-1017-release",
+                  "title": "DeepSeek-V4.1-Flash-1017: Wish-Driven Programming Made Real",
+                  "publisher": "DeepSeek API Docs",
+                  "url": "https://api-docs.deepseek.com/news/news261017/",
+                  "publishedAt": "2026-10-17",
+                  "kind": "primary",
+                  "supports": "发布日期、上线范围、自反馈强化学习和产品开发定位。",
+                  "checkedAt": "2026-10-26T20:10:00+08:00"
+                },
+                {
+                  "id": "deepseek-1017-card",
+                  "title": "DeepSeek-V4.1-Flash-1017 Model Card",
+                  "publisher": "DeepSeek / Hugging Face",
+                  "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017",
+                  "publishedAt": "2026-10-17",
+                  "kind": "primary",
+                  "supports": "MIT 许可、1M 上下文、官方基准、harness 和推理入口。",
+                  "checkedAt": "2026-10-26T20:12:00+08:00"
+                },
+                {
+                  "id": "deepseek-independent-benchmarks",
+                  "title": "DeepSeek V4.1 Flash benchmarks & pricing",
+                  "publisher": "The Model Gap",
+                  "url": "https://themodelgap.com/models/deepseek-v4-1-flash",
+                  "publishedAt": "2026-10-19",
+                  "kind": "independent",
+                  "supports": "汇总 Artificial Analysis 的 1017 数据，并解释不同 harness 不可直接比较。",
+                  "checkedAt": "2026-10-26T20:15:00+08:00"
+                }
+              ],
+              "verification": {
+                "status": "verified",
+                "note": "型号、发布日期和上线范围由官方公告与模型卡确认；能力提升同时保留第三方不同口径。",
+                "checkedBy": "DailyBoke 编辑",
+                "checkedAt": "2026-10-26T20:18:00+08:00"
+              }
+            },
+            {
+              "id": "deepseek-architecture-deployment",
+              "rank": 2,
+              "slug": "deepseek-architecture-deployment",
+              "topic": "架构与部署",
+              "company": "DeepSeek",
+              "title": "1M 上下文和压缩 KV cache，但完整权重仍约 510 GB",
+              "kicker": "架构拆解",
+              "happened": "V4.1 Flash 是多模态 MoE，采用 20 层因果编码器加 20 层解码器。官方称预填充每 token 激活约 8B 参数、生成约 16B，并把持久化 KV cache 压缩到上一代约八分之一。",
+              "whyImportant": "对长代码库和多步 Agent，KV cache、激活参数和并发比总参数更直接影响推理成本。MIT 开放权重增加了部署选择，但不代表消费级硬件即可运行原始版本。",
+              "watchNext": "评估量化后的能力损失、真实显存、首 token 延迟、并发和 1M 长上下文检索稳定性。",
+              "claims": [
+                {
+                  "text": "模型卡确认 1M 上下文、MIT 许可和约 510 GB 仓库。",
+                  "certainty": "fact"
+                },
+                {
+                  "text": "8B/16B 激活量与 KV cache 压缩来自官方技术报告。",
+                  "certainty": "analysis"
+                },
+                {
+                  "text": "多数团队自托管仍需要高端多卡基础设施。",
+                  "certainty": "projection"
+                }
+              ],
+              "sources": [
+                {
+                  "id": "deepseek-v41-base-card",
+                  "title": "DeepSeek-V4.1-Flash: Pushing the Limits of KV Cache Compression",
+                  "publisher": "DeepSeek / Hugging Face",
+                  "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash",
+                  "publishedAt": "2026-09-10",
+                  "kind": "primary",
+                  "supports": "552B backbone、8B/16B 激活、CED、CSA2、SWA replay 与 KV cache 声明。",
+                  "checkedAt": "2026-10-26T20:20:00+08:00"
+                },
+                {
+                  "id": "deepseek-1017-repository",
+                  "title": "DeepSeek-V4.1-Flash-1017 repository",
+                  "publisher": "DeepSeek / Hugging Face",
+                  "url": "https://huggingface.co/deepseek-ai/DeepSeek-V4.1-Flash-1017/tree/main",
+                  "publishedAt": "2026-10-17",
+                  "kind": "primary",
+                  "supports": "完整仓库体积、权重格式、许可证与部署说明。",
+                  "checkedAt": "2026-10-26T20:22:00+08:00"
+                },
+                {
+                  "id": "deepseek-vllm-recipe",
+                  "title": "DeepSeek-V4.1-Flash vLLM deployment recipe",
+                  "publisher": "vLLM Project",
+                  "url": "https://github.com/vllm-project/recipes/blob/main/models/deepseek-ai/DeepSeek-V4.1-Flash.yaml",
+                  "publishedAt": "2026-10-17",
+                  "kind": "independent",
+                  "supports": "独立推理框架的硬件支持与高级部署配置。",
+                  "checkedAt": "2026-10-26T20:24:00+08:00"
+                }
+              ],
+              "verification": {
+                "status": "verified",
+                "note": "架构来自官方技术资料；部署门槛由仓库体积与独立 vLLM 配方交叉确认。",
+                "checkedBy": "DailyBoke 编辑",
+                "checkedAt": "2026-10-26T20:26:00+08:00"
+              }
+            },
+            {
+              "id": "deepseek-price-and-fit",
+              "rank": 3,
+              "slug": "deepseek-price-and-fit",
+              "topic": "成本与选型",
+              "company": "DeepSeek",
+              "title": "API 很便宜，自托管却未必更省",
+              "kicker": "生产成本",
+              "happened": "官方 API 非高峰未缓存输入为每百万 token 0.15 美元、输出 0.60 美元，高峰翻倍；缓存命中输入最低 0.003 美元。官方 deepseek-flash 已指向 1017。",
+              "whyImportant": "Agent 成本由多轮调用、缓存命中、成功率和重试共同决定。一个独立案例中，四张 H200 的按需自托管费用高于等量 DeepSeek API 估算，说明开放权重不等于低运维成本。",
+              "watchNext": "用真实业务的任务成功率、总 token、重试次数和人工复核成本计算每任务价格。",
+              "claims": [
+                {
+                  "text": "API 型号、上下文、输出上限和当前价格来自官方价格页。",
+                  "certainty": "fact"
+                },
+                {
+                  "text": "第三方自托管案例发生在 1017 之前，只能说明成本结构。",
+                  "certainty": "analysis"
+                },
+                {
+                  "text": "中小团队通常更适合先从 API 验证。",
+                  "certainty": "projection"
+                }
+              ],
+              "sources": [
+                {
+                  "id": "deepseek-pricing",
+                  "title": "Models & Pricing",
+                  "publisher": "DeepSeek API Docs",
+                  "url": "https://api-docs.deepseek.com/quick_start/pricing/",
+                  "publishedAt": "2026-10-26",
+                  "kind": "primary",
+                  "supports": "deepseek-flash 对应 1017、1M 上下文、384K 输出、峰谷价格与并发。",
+                  "checkedAt": "2026-10-26T20:28:00+08:00"
+                },
+                {
+                  "id": "deepseek-self-host-cost",
+                  "title": "Firm rents four Nvidia H200s to test '80x cheaper' DeepSeek claim",
+                  "publisher": "Tom's Hardware",
+                  "url": "https://www.tomshardware.com/tech-industry/artificial-intelligence/firm-rents-four-nvidia-h200s-to-test-80x-cheaper-deepseek-claim-usd13-200-monthly-gpu-rental-doubles-claude-bill-while-security-flaws-keep-code-offline",
+                  "publishedAt": "2026-10-01",
+                  "kind": "independent",
+                  "supports": "独立自托管成本案例、API 成本对比及安全隔离限制。",
+                  "checkedAt": "2026-10-26T20:30:00+08:00"
+                }
+              ],
+              "verification": {
+                "status": "verified",
+                "note": "当前价格由官方页面确认；独立案例明确标注为 1017 之前的运维成本观察。",
+                "checkedBy": "DailyBoke 编辑",
+                "checkedAt": "2026-10-26T20:32:00+08:00"
+              }
+            }
+          ],
+          "duration": "4 分 47 秒",
+          "audio": {
+            "url": "/audio/episode-2026-10-26-deepseek-v4-1-flash-1017-mimo.wav",
+            "mime": "audio/wav",
+            "durationSec": 287,
+            "provider": "xiaomi-mimo/mimo-v2.5-tts/茉莉",
+            "label": "Xiaomi MiMo · 茉莉 · 自然克制新闻风格"
+          }
+        }
+      ]
+    }
+  ]
+}
