@@ -7,3 +7,8 @@ coverage
 data/*.tmp
 .DS_Store
 *.tsbuildinfo
+.local/
+.env.*
+!.env.example
+pages-site/public/audio/
+pages-site/out/

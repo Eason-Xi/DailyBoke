@@ -5,5 +5,5 @@ import nextTypescript from "eslint-config-next/typescript";
 export default defineConfig([
   ...nextVitals,
   ...nextTypescript,
-  globalIgnores([".next/**", "coverage/**", "public/audio/**"]),
+  globalIgnores([".next/**", "coverage/**", "public/audio/**", "pages-site/.next/**", "pages-site/out/**", "pages-site/public/audio/**", ".local/**"]),
 ]);

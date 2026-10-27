@@ -1,0 +1,78 @@
+name: Build and deploy public podcast
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "pages-site/**"
+      - "public/audio/**"
+      - "app/globals.css"
+      - ".github/workflows/pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      pages: read
+    outputs:
+      pages_enabled: ${{ steps.pages.outputs.enabled }}
+    env:
+      PAGES_BASE_PATH: /DailyBoke
+      PAGES_SITE_URL: https://eason-xi.github.io/DailyBoke
+      NEXT_TELEMETRY_DISABLED: 1
+    steps:
+      - uses: actions/checkout@v6
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: pages-site/package-lock.json
+      - run: npm ci --prefix pages-site
+      - run: npm --prefix pages-site run build
+      - name: Save verified static website
+        uses: actions/upload-artifact@v4
+        with:
+          name: dailyboke-public-site
+          path: pages-site/out
+          include-hidden-files: true
+          retention-days: 14
+      - name: Check Pages availability
+        id: pages
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh api "repos/${GITHUB_REPOSITORY}/pages" >/dev/null 2>&1; then
+            echo "enabled=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            echo "Pages is not enabled. The verified site is available as the dailyboke-public-site artifact." >> "$GITHUB_STEP_SUMMARY"
+          fi
+      - name: Package Pages artifact
+        if: steps.pages.outputs.enabled == 'true'
+        uses: actions/upload-pages-artifact@v4
+        with:
+          path: pages-site/out
+
+  deploy:
+    if: needs.build.outputs.pages_enabled == 'true'
+    needs: build
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy verified public website
+        id: deployment
+        uses: actions/deploy-pages@v4
