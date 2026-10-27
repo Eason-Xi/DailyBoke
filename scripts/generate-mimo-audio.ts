@@ -1,10 +1,7 @@
-import { execFile } from "node:child_process";
 import { createInterface } from "node:readline";
-import { promisify } from "node:util";
 import { getEpisode, updateEpisode } from "../lib/content-store";
 import { XiaomiMiMoTtsProvider } from "../lib/providers";
-
-const run = promisify(execFile);
+import { prepareAudioForPublication } from "../lib/audio-storage";
 
 function readApiKey(): Promise<string> {
   if (process.stdin.isTTY && process.stdin.setRawMode) {
@@ -55,27 +52,16 @@ async function main() {
 
   const provider = new XiaomiMiMoTtsProvider(apiKey);
   const result = await provider.synthesize(episode.scriptMarkdown, episode.id);
-  const absolutePath = `${process.cwd()}/public${result.publicUrl}`;
-  const { stdout } = await run("ffprobe", [
-    "-v", "error",
-    "-show_entries", "format=duration",
-    "-of", "default=noprint_wrappers=1:nokey=1",
-    absolutePath,
-  ]);
-  const durationSec = Math.round(Number(stdout.trim()));
+  const durationSec = result.durationSec;
   if (!Number.isFinite(durationSec)) throw new Error("无法读取 MiMo 音频时长。");
 
+  const preview = { url: result.publicUrl, mime: result.mime, durationSec, provider: result.provider, label: result.label, sizeBytes: result.sizeBytes, storage: result.storage };
+  const audio = episode.status === "published" ? await prepareAudioForPublication(preview, episode.id) : preview;
   await updateEpisode(episode.id, (current) => ({
     ...current,
     audioStatus: "ready",
     duration: `${Math.floor(durationSec / 60)} 分 ${String(durationSec % 60).padStart(2, "0")} 秒`,
-    audio: {
-      url: result.publicUrl,
-      mime: result.mime,
-      durationSec,
-      provider: result.provider,
-      label: result.label,
-    },
+    audio,
   }));
 
   console.log(`Generated Xiaomi MiMo audio for ${episode.id} (${durationSec}s).`);

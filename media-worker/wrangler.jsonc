@@ -1,0 +1,13 @@
+{
+  "$schema": "../node_modules/wrangler/config-schema.json",
+  "name": "dailyboke-media",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-10-27",
+  "compatibility_flags": ["nodejs_compat"],
+  "workers_dev": true,
+  "preview_urls": false,
+  "observability": { "enabled": true, "head_sampling_rate": 0.1 },
+  "r2_buckets": [
+    { "binding": "AUDIO", "bucket_name": "dailyboke-podcast-audio" }
+  ]
+}

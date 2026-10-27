@@ -178,7 +178,7 @@
         }
       ],
       "audio": {
-        "url": "/audio/episode-2026-10-26-deepseek-v4-1-flash-1017-revision-2-mimo.wav",
+        "url": "https://dailyboke-media.wangfugui1799.workers.dev/published/episodes/episode-2026-10-26-deepseek-v4-1-flash-1017/cdceb06e7de037aeb0e2ce557070d555ac84a81a1cfea6e3dc40e99964e6aced.wav",
         "mime": "audio/wav",
         "sizeBytes": 1313324,
         "durationSec": 27,

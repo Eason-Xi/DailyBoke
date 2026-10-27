@@ -27,6 +27,25 @@ export interface Claim {
   certainty: Certainty;
 }
 
+export interface AudioAsset {
+  url: string;
+  mime: string;
+  durationSec: number;
+  /** TTS model and voice, separate from storage provider. */
+  provider: string;
+  label: string;
+  sizeBytes?: number;
+  storage?: {
+    provider: "local" | "r2";
+    key: string;
+    visibility: "private" | "public";
+    /** Retained local source for retry/migration; no absolute filesystem paths. */
+    localKey?: string;
+    sha256?: string;
+    uploadedAt?: string;
+  };
+}
+
 export interface Story {
   id: string;
   rank: number;
@@ -59,13 +78,7 @@ export interface Episode {
   duration: string;
   status: EpisodeStatus;
   audioStatus: AudioStatus;
-  audio?: {
-    url: string;
-    mime: string;
-    durationSec: number;
-    provider: string;
-    label: string;
-  };
+  audio?: AudioAsset;
   publication?: {
     publishedAt: string;
     rssGuid: string;

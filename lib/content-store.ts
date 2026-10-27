@@ -1,4 +1,5 @@
 import { promises as fs } from "node:fs";
+import { randomUUID } from "node:crypto";
 import path from "node:path";
 import type { Episode, EpisodeStore } from "./types";
 import { isPublicEpisode } from "./workflow";
@@ -7,13 +8,22 @@ const storePath = process.env.DAILYBOKE_DATA_FILE
   ? path.resolve(process.env.DAILYBOKE_DATA_FILE)
   : path.join(process.cwd(), "data", "episodes.json");
 
+// Serialize read-modify-write transactions in this local server process.
+// Multiple server instances still require a transactional database (see README).
+let mutations: Promise<void> = Promise.resolve();
+function mutateStore<T>(task: () => Promise<T>): Promise<T> {
+  const result = mutations.then(task);
+  mutations = result.then(() => undefined, () => undefined);
+  return result;
+}
+
 export async function readStore(): Promise<EpisodeStore> {
   const raw = await fs.readFile(storePath, "utf8");
   return JSON.parse(raw) as EpisodeStore;
 }
 
 export async function writeStore(store: EpisodeStore): Promise<void> {
-  const tempPath = `${storePath}.${process.pid}.tmp`;
+  const tempPath = `${storePath}.${process.pid}.${randomUUID()}.tmp`;
   await fs.mkdir(path.dirname(storePath), { recursive: true });
   await fs.writeFile(tempPath, `${JSON.stringify(store, null, 2)}\n`, "utf8");
   await fs.rename(tempPath, storePath);
@@ -40,19 +50,23 @@ export async function updateEpisode(
   id: string,
   updater: (episode: Episode) => Episode,
 ): Promise<Episode | undefined> {
-  const store = await readStore();
-  const index = store.episodes.findIndex((episode) => episode.id === id);
-  if (index === -1) return undefined;
-  const updated = updater(store.episodes[index]);
-  store.episodes[index] = updated;
-  await writeStore(store);
-  return updated;
+  return mutateStore(async () => {
+    const store = await readStore();
+    const index = store.episodes.findIndex((episode) => episode.id === id);
+    if (index === -1) return undefined;
+    const updated = updater(store.episodes[index]);
+    store.episodes[index] = updated;
+    await writeStore(store);
+    return updated;
+  });
 }
 
 export async function upsertEpisode(episode: Episode): Promise<void> {
-  const store = await readStore();
-  const index = store.episodes.findIndex((item) => item.id === episode.id);
-  if (index === -1) store.episodes.push(episode);
-  else store.episodes[index] = episode;
-  await writeStore(store);
+  return mutateStore(async () => {
+    const store = await readStore();
+    const index = store.episodes.findIndex((item) => item.id === episode.id);
+    if (index === -1) store.episodes.push(episode);
+    else store.episodes[index] = episode;
+    await writeStore(store);
+  });
 }

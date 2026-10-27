@@ -12,3 +12,7 @@ data/*.tmp
 !.env.example
 pages-site/public/audio/
 pages-site/out/
+.wrangler/
+.dev.vars*
+media-worker/dist/
+/dist/

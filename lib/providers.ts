@@ -17,10 +17,17 @@ export interface EditorialProvider {
   summarize(candidates: NewsCandidate[]): Promise<string>;
 }
 
+import { promises as fs } from "node:fs";
+import path from "node:path";
+import { savePrivatePreview } from "./local-audio";
+import type { AudioAsset } from "./types";
+
 export interface TtsResult {
   publicUrl: string;
   mime: string;
   durationSec: number;
+  sizeBytes: number;
+  storage: NonNullable<AudioAsset["storage"]>;
   provider: string;
   label: string;
   fallback: boolean;
@@ -54,8 +61,11 @@ export class DemoTtsProvider implements TtsProvider {
   name = "local-demo-fallback";
   isConfigured = false;
   async synthesize(): Promise<TtsResult> {
+    const bytes = await fs.readFile(path.join(process.cwd(), "public/audio/2026-10-25-weekly-review.mp3"));
+    const preview = await savePrivatePreview(bytes, "audio/mpeg");
     return {
-      publicUrl: "/audio/2026-10-25-weekly-review.mp3",
+      ...preview,
+      publicUrl: preview.url,
       mime: "audio/mpeg",
       durationSec: 218,
       provider: this.name,
@@ -118,18 +128,14 @@ export class XiaomiMiMoTtsProvider implements TtsProvider {
     const audioBase64 = payload.choices?.[0]?.message?.audio?.data;
     if (!audioBase64) throw new Error("Xiaomi MiMo 响应中缺少音频数据。");
 
-    const { promises: fs } = await import("node:fs");
-    const path = await import("node:path");
-    const filename = `${episodeId}-mimo.wav`;
-    const outputPath = path.join(process.cwd(), "public", "audio", filename);
-    await fs.mkdir(path.dirname(outputPath), { recursive: true });
+    if (!/^[a-zA-Z0-9_-]+$/.test(episodeId)) throw new Error("节目 ID 无效。");
     const wav = Buffer.from(audioBase64, "base64");
-    await fs.writeFile(outputPath, wav);
-
     const durationSec = getWavDurationSec(wav);
+    const preview = await savePrivatePreview(wav);
 
     return {
-      publicUrl: `/audio/${filename}`,
+      ...preview,
+      publicUrl: preview.url,
       mime: "audio/wav",
       durationSec,
       provider: `${this.name}/${this.model}/${this.voice}`,

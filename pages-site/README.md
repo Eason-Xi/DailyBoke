@@ -19,6 +19,8 @@ npm --prefix pages-site run build
 
 输出目录：`pages-site/out/`。GitHub Actions 始终构建并提供 `dailyboke-public-site` 下载产物；只有仓库已启用 Pages 时才部署，所用权限分别是构建 `contents: read`/`pages: read` 与部署 `pages: write`/`id-token: write`。
 
+DeepSeek 这一期已发布音频使用 R2 只读媒体 Worker 的稳定 HTTPS 地址；无需购买媒体域名。构建不会把云端音频再复制进 Pages，RSS 直接使用这个链接及真实字节长度。其他节目仍可使用 Pages 上的现有音频。
+
 公开地址：`https://eason-xi.github.io/DailyBoke/`。Pages 已启用，站点会在工作流成功部署后更新。
 
 仓库 `Eason-Xi/DailyBoke` 已由用户于 2026-10-27 授权改为公开，GitHub Pages 使用 GitHub Actions 发布。若以后改回私有，需要确认账号套餐支持私有仓库 Pages。

@@ -4,9 +4,12 @@ import { getEpisode, updateEpisode } from "@/lib/content-store";
 import { getTtsProvider } from "@/lib/providers";
 import { formatDurationZh } from "@/lib/tts-script";
 import { canPublishRevision, requiresFreshAudio } from "@/lib/workflow";
+import { AudioStorageError, prepareAudioForPublication } from "@/lib/audio-storage";
+import { reviewAccessResponse } from "@/lib/review-access";
 import type { Episode, EpisodeRevision, EpisodeStatus, EpisodeVersion, Story } from "@/lib/types";
 
 type RouteContext = { params: Promise<{ id: string }> };
+export const runtime = "nodejs";
 type ActionName =
   | "submit" | "return" | "approve" | "regenerate" | "publish" | "retry"
   | "trash" | "restore" | "unpublish" | "republish"
@@ -52,13 +55,20 @@ function audioFromResult(result: Awaited<ReturnType<ReturnType<typeof getTtsProv
     durationSec: result.durationSec,
     provider: result.provider,
     label: result.label,
+    sizeBytes: result.sizeBytes,
+    storage: result.storage,
   };
 }
 
 export async function PATCH(request: Request, context: RouteContext) {
+  const denied = reviewAccessResponse(request);
+  if (denied) return denied;
   const { id } = await context.params;
   const current = await getEpisode(id);
   if (!current) return NextResponse.json({ error: "未找到节目。" }, { status: 404 });
+  if (current.status === "trashed" || current.status === "unlisted") {
+    return NextResponse.json({ error: "请先恢复内容，再创建或编辑草稿。" }, { status: 409 });
+  }
 
   const body = await request.json() as {
     scriptMarkdown?: unknown;
@@ -76,7 +86,7 @@ export async function PATCH(request: Request, context: RouteContext) {
     if (typeof body.title !== "string" || !body.title.trim()) return NextResponse.json({ error: "标题不能为空。" }, { status: 400 });
     if (typeof body.dek !== "string" || !body.dek.trim()) return NextResponse.json({ error: "摘要不能为空。" }, { status: 400 });
     if (typeof body.editionLabel !== "string" || !body.editionLabel.trim()) return NextResponse.json({ error: "栏目标签不能为空。" }, { status: 400 });
-    if (!Array.isArray(body.stories) || body.stories.length !== 3) return NextResponse.json({ error: "必须保留三条要点及其来源。" }, { status: 400 });
+    if (!Array.isArray(body.stories) || body.stories.length < 1) return NextResponse.json({ error: "请保留新闻要点及其来源。" }, { status: 400 });
     if (body.audioMode !== "regenerate" && body.audioMode !== "keep") return NextResponse.json({ error: "请选择音频处理方式。" }, { status: 400 });
 
     const episode = await updateEpisode(id, (item) => ({
@@ -89,8 +99,10 @@ export async function PATCH(request: Request, context: RouteContext) {
         scriptMarkdown: body.scriptMarkdown!.toString().trim(),
         stories: body.stories as Story[],
         audioMode: body.audioMode as EpisodeRevision["audioMode"],
-        audioStatus: body.audioMode === "keep" ? "ready" : item.pendingRevision!.audioStatus,
-        audio: body.audioMode === "keep" ? item.audio : item.pendingRevision!.audio,
+        audioStatus: body.audioMode === "keep" ? "ready"
+          : requiresFreshAudio(item.pendingRevision!.scriptMarkdown, body.scriptMarkdown!.toString()) || item.pendingRevision!.audioMode === "keep" ? "not_started" : item.pendingRevision!.audioStatus,
+        audio: body.audioMode === "keep" ? item.audio
+          : requiresFreshAudio(item.pendingRevision!.scriptMarkdown, body.scriptMarkdown!.toString()) || item.pendingRevision!.audioMode === "keep" ? undefined : item.pendingRevision!.audio,
         updatedAt: new Date().toISOString(),
       },
     }));
@@ -107,14 +119,43 @@ export async function PATCH(request: Request, context: RouteContext) {
     return {
       ...item,
       scriptMarkdown: nextScript,
-      ...(changed && item.audio ? { status: "in_review" as const, audioStatus: "not_started" as const, audio: undefined } : {}),
+      ...(changed ? { status: "in_review" as const, audioStatus: "not_started" as const, audio: undefined } : {}),
     };
   });
   invalidatePages();
   return NextResponse.json({ episode });
 }
 
+class PublicationConflictError extends Error {}
+
+function publicationFingerprint(episode: Episode) {
+  return JSON.stringify({ status: episode.status, scriptMarkdown: episode.scriptMarkdown, audio: episode.audio, pendingRevision: episode.pendingRevision, versionHistory: episode.versionHistory, management: episode.management });
+}
+
+async function updatePublication(current: Episode, updater: (episode: Episode) => Episode) {
+  return updateEpisode(current.id, (item) => {
+    if (publicationFingerprint(item) !== publicationFingerprint(current)) {
+      throw new PublicationConflictError("上传期间节目内容或状态发生变化，请重新审核后发布。");
+    }
+    return updater(item);
+  });
+}
+
 export async function POST(request: Request, context: RouteContext) {
+  const denied = reviewAccessResponse(request);
+  if (denied) return denied;
+  try {
+    return await performAction(request, context);
+  } catch (error) {
+    const { id } = await context.params;
+    const episode = await getEpisode(id);
+    const message = error instanceof AudioStorageError || error instanceof PublicationConflictError
+      ? error.message : "发布准备失败，请检查服务端存储配置、网络和本地音频文件。";
+    return NextResponse.json({ episode, error: message }, { status: error instanceof PublicationConflictError ? 409 : 502 });
+  }
+}
+
+async function performAction(request: Request, context: RouteContext) {
   const { id } = await context.params;
   const current = await getEpisode(id);
   if (!current) return NextResponse.json({ error: "未找到节目。" }, { status: 404 });
@@ -148,13 +189,15 @@ export async function POST(request: Request, context: RouteContext) {
   }
 
   if (action === "unpublish" || action === "republish") {
-    const episode = await updateEpisode(id, (item) => action === "unpublish" ? ({
+    const audio = action === "republish" ? await prepareAudioForPublication(current.audio, id) : current.audio;
+    const episode = await updatePublication(current, (item) => action === "unpublish" ? ({
       ...item,
       status: "unlisted",
       management: { ...item.management, unlistedAt: now },
     }) : ({
       ...item,
       status: "published",
+      audio,
       management: { ...item.management, unlistedAt: undefined },
       publication: { publishedAt: now, rssGuid: item.publication?.rssGuid ?? `dailyboke:${item.id}` },
     }));
@@ -199,17 +242,23 @@ export async function POST(request: Request, context: RouteContext) {
     try {
       const result = await provider.synthesize(current.pendingRevision.scriptMarkdown, `${current.id}-revision-${current.pendingRevision.number}`);
       const episode = await updateEpisode(id, (item) => {
-        if (!item.pendingRevision || item.pendingRevision.scriptMarkdown !== current.pendingRevision!.scriptMarkdown) return item;
+        if (item.status !== "published" || !item.pendingRevision || item.pendingRevision.number !== current.pendingRevision!.number
+          || item.pendingRevision.audioMode !== "regenerate" || item.pendingRevision.audioStatus !== "synthesizing"
+          || item.pendingRevision.scriptMarkdown !== current.pendingRevision!.scriptMarkdown) return item;
         return { ...item, pendingRevision: { ...item.pendingRevision, audioStatus: "ready", audio: audioFromResult(result), updatedAt: now } };
       });
-      if (!episode?.pendingRevision || episode.pendingRevision.scriptMarkdown !== current.pendingRevision.scriptMarkdown) {
+      if (!episode?.pendingRevision || episode.pendingRevision.audio?.url !== result.publicUrl) {
         invalidatePages();
         return NextResponse.json({ episode, error: "合成期间修订稿发生变化，请按最新内容重新生成音频。" }, { status: 409 });
       }
       invalidatePages();
       return NextResponse.json({ episode });
     } catch (error) {
-      const episode = await updateEpisode(id, (item) => ({ ...item, pendingRevision: { ...item.pendingRevision!, audioStatus: "failed" } }));
+      const episode = await updateEpisode(id, (item) => {
+        if (item.status !== "published" || !item.pendingRevision || item.pendingRevision.number !== current.pendingRevision!.number
+          || item.pendingRevision.audioStatus !== "synthesizing" || item.pendingRevision.scriptMarkdown !== current.pendingRevision!.scriptMarkdown) return item;
+        return { ...item, pendingRevision: { ...item.pendingRevision, audioStatus: "failed" } };
+      });
       return NextResponse.json({ episode, error: error instanceof Error ? error.message : "TTS 失败" }, { status: 502 });
     }
   }
@@ -220,8 +269,8 @@ export async function POST(request: Request, context: RouteContext) {
     if (!canPublishRevision(revision)) {
       return NextResponse.json({ error: "请先生成并试听修订版 MiMo 音频。" }, { status: 409 });
     }
-    const nextAudio = revision.audioMode === "keep" ? current.audio : revision.audio;
-    const episode = await updateEpisode(id, (item) => ({
+    const nextAudio = await prepareAudioForPublication(revision.audioMode === "keep" ? current.audio : revision.audio, id);
+    const episode = await updatePublication(current, (item) => ({
       ...item,
       editionLabel: revision.editionLabel,
       title: revision.title,
@@ -244,7 +293,8 @@ export async function POST(request: Request, context: RouteContext) {
     const history = current.versionHistory ?? [];
     const previous = history.at(-1);
     if (!previous) return NextResponse.json({ error: "没有可回退的历史版本。" }, { status: 409 });
-    const episode = await updateEpisode(id, (item) => ({
+    const audio = await prepareAudioForPublication(previous.audio, id);
+    const episode = await updatePublication(current, (item) => ({
       ...item,
       editionLabel: previous.editionLabel,
       title: previous.title,
@@ -252,8 +302,8 @@ export async function POST(request: Request, context: RouteContext) {
       scriptMarkdown: previous.scriptMarkdown,
       stories: previous.stories,
       duration: previous.duration,
-      audio: previous.audio,
-      audioStatus: previous.audio ? "ready" : "not_started",
+      audio,
+      audioStatus: audio ? "ready" : "not_started",
       revisionNumber: previous.number,
       versionHistory: [...history.slice(0, -1), versionSnapshot(item, now)],
       pendingRevision: undefined,
@@ -269,7 +319,7 @@ export async function POST(request: Request, context: RouteContext) {
     try {
       const result = await provider.synthesize(current.scriptMarkdown, current.id);
       const episode = await updateEpisode(id, (item) => {
-        if (item.scriptMarkdown !== current.scriptMarkdown) return item;
+        if (item.status !== "approved" || item.audioStatus !== "synthesizing" || item.scriptMarkdown !== current.scriptMarkdown) return item;
         return {
           ...item,
           status: "ready",
@@ -279,7 +329,7 @@ export async function POST(request: Request, context: RouteContext) {
           publication: undefined,
         };
       });
-      if (!episode || episode.scriptMarkdown !== current.scriptMarkdown) {
+      if (!episode || episode.status !== "ready" || episode.audio?.url !== result.publicUrl) {
         invalidatePages();
         return NextResponse.json({ episode, error: "合成期间文稿发生变化，请按最新内容重新生成音频。" }, { status: 409 });
       }
@@ -287,23 +337,31 @@ export async function POST(request: Request, context: RouteContext) {
       return NextResponse.json({ episode });
     } catch (error) {
       const message = error instanceof Error ? error.message : "未知 TTS 错误";
-      const episode = await updateEpisode(id, (item) => ({
-        ...item,
-        status: "failed",
-        audioStatus: "failed",
-        publication: { publishedAt: now, rssGuid: `dailyboke:${item.id}`, error: `TTS 失败：${message}` },
-      }));
+      const episode = await updateEpisode(id, (item) => {
+        if (item.status !== "approved" || item.audioStatus !== "synthesizing" || item.scriptMarkdown !== current.scriptMarkdown) return item;
+        return {
+          ...item,
+          status: "failed",
+          audioStatus: "failed",
+          publication: { publishedAt: now, rssGuid: `dailyboke:${item.id}`, error: `TTS 失败：${message}` },
+        };
+      });
       invalidatePages();
       return NextResponse.json({ episode }, { status: 502 });
     }
   }
 
-  const episode = await updateEpisode(id, (item): Episode => {
+  if ((action === "publish" || action === "retry") && (current.audioStatus !== "ready" || !current.audio)) {
+    return NextResponse.json({ error: "请先生成并审核当前文稿对应的音频。" }, { status: 409 });
+  }
+  const publishedAudio = action === "publish" || action === "retry" ? await prepareAudioForPublication(current.audio, id) : current.audio;
+  const episode = await updatePublication(current, (item): Episode => {
     if (action === "submit") return { ...item, status: "in_review" };
     if (action === "return") return { ...item, status: "returned", audioStatus: "not_started" };
     if (action === "publish" || action === "retry") return {
       ...item,
       status: "published",
+      audio: publishedAudio,
       title: item.title.replace(/^待审核[：:]\s*/, ""),
       editionLabel: item.editionLabel.includes("审核") ? "已发布节目" : item.editionLabel,
       revisionNumber: item.revisionNumber ?? 1,
